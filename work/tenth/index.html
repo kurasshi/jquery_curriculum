@@ -26,6 +26,35 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script>
+    $(function(){
+      $('.search__btn').on('click', function(){
+        var searchWord = $('.search__text__input').val();
+         $.ajax({
+         url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+         type: 'GET',
+         datatype: 'json',
+         data: {
+            // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
+          applicationId: '1019399324990976605', // (今回はこのIDを使用してください)
+          booksGenreId: '001',
+          hits: 20,
+
+         },
+       });
+       .done(function(data) {
+         // この中にデータ取得後の動きを記述していきます。
+         console.log(data);
+       });
+       .fail(function(data){
+        console.log('エラーが発生しました。以下該当するエラー条件をご確認ください。')
+        console.log('ネットが切れている')
+        console.log('半角英数字1文字しか入力されていない')
+        console.log('検索ボタンが連打された')
+        console.log('検索ワードの指定がない')
+       });
+
+      });
+
       // 楽天ブックスの総合検索APIを使って製作してください。
       // answerの挙動を良く見てね！
       //
@@ -68,6 +97,7 @@
       //
       //
       //
+      });
     </script>
   </body>
 </html>

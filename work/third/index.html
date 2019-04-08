@@ -27,11 +27,11 @@
       $(function(){
       // 今回やるのはタブメニューです。
       // navの小要素であるliをクリックして、contents内の小要素であるli要素を表示させる。
-      $('.nav').find('li').on('click',function(){
-        var index = $(this).index();
-        $('.contents').find('li').addClass('is-hidden').eq(index).removeClass('is-hidden');
+        $('.nav').find('li').on('click',function(){
+          var index = $(this).index();
+          $('.contents').find('li').addClass('is-hidden').eq(index).removeClass('is-hidden');
+        });
       });
-    });
     </script>
   </body>
 </html>
