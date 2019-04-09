@@ -34,15 +34,17 @@
          type: 'GET',
          datatype: 'json',
          data: {
-            // 「区分:サービス固有パラメーター」を確認して、必要な情報をdata内に入れましょう。
-          applicationId: '1019399324990976605', // (今回はこのIDを使用してください)
+          applicationId: '1019399324990976605',
           booksGenreId: '001',
-          hits: 20,
-
+          hits,
+          title,
+        	author,
+          publisherName
          },
        });
        .done(function(data) {
          // この中にデータ取得後の動きを記述していきます。
+
          console.log(data);
        });
        .fail(function(data){
