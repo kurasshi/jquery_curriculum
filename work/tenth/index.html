@@ -29,14 +29,14 @@
     <script>
     $(function(){
 
-      var pageNum = 0; // ページ番号を定義
-      var inputWord = ''; // 前の検索ワード格納用
-
      // 検索ボタン押下時点で発火
       $('#js-search-button').on('click', function(){
         searchEvent();
       });
 
+
+      var pageNum = 0; // ページ番号を定義
+      var inputWord = ''; // 前の検索ワード格納用
 
       // 以下searchEvent関数
       function searchEvent (){
@@ -74,8 +74,8 @@
           succeeded(data);
 
         // 通信失敗の場合
-        }).fail(function(xhr,err,status){
-          failed(xhr,err,status);
+        }).fail(function(xhr){
+          failed(xhr);
         })
       }
 
@@ -83,16 +83,18 @@
       function succeeded(data){
         // 検索結果が1件以上の場合
         if(data.count > 0){
-
+          // 配列の中身を逆順にする
+          data.Items.reverse();
+          // console.log(data.Items);
           // data.Items中のヒットした20件が対象
           $.each(data.Items, function(i,val){
-            var template = $('<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
+            var template = '<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
             val.Item.itemUrl + '"class="lists__item__link" target="_blank">' + '<img src="' + val.Item
             .largeImageUrl + '" class="lists__item__img" alt="' + val.Item.title + '">' +
             '<p class="lists__item__detail">作品名：　' + val.Item.title + '</p>' +
             '<p class="lists__item__detail">作者　：　' + val.Item.author + '</p>' +
             '<p class="lists__item__detail">出版社：　' + val.Item.publisherName + '</p>' + '</a>' +
-            '</div>' + '</li>');
+            '</div>' + '</li>';
 
             $('.lists').prepend(template); // .lists要素の上に追加される
           })
@@ -106,18 +108,18 @@
 
 
       // 以下.fail関数
-      function failed(xhr,err,status){
-        // console.log(xhr.responseText);
+      function failed(xhr){
+        console.log(xhr);
         // 検索ワードが入力されていない場合
-        if(xhr.responseText === '{"error":"wrong_parameter","error_description":"keyword must be set"}'){
+        if(xhr.responseJSON.error_description === 'keyword must be set'){
           $('.lists').html('<p>検索ワードを入力してください。</p>');
 
           // 検索ワードが半角英数字だった場合
-        }else if(xhr.responseText === '{"error":"wrong_parameter","error_description":"keyword length must be over 2 characters"}'){
+        }else if(xhr.responseJSON.error_description === 'keyword length must be over 2 characters'){
           $('.lists').html('<p>半角英数字1文字では検索できません。<br>検索キーワードを見直してください。</p>');
 
           // リクエスト数過多の場合
-        }else if(xhr.responseText === '{"error":"too_many_requests","error_description":"number of allowed requests has been exceeded for this API. please try again soon."}'){
+        }else if(xhr.responseJSON.error_description === 'number of allowed requests has been exceeded for this API. please try again soon.'){
           $('.lists').html('<p>検索ボタンを連打すると処理が追いつかずエラーになります。<br>1回ずつクリックしてください。</p>');
 
           // 通信失敗の場合
