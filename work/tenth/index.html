@@ -83,12 +83,14 @@
       function succeeded(data){
         // 検索結果が1件以上の場合
         if(data.count > 0){
+
           // 配列の中身を逆順にする
           data.Items.reverse();
-          // console.log(data.Items);
+
           // data.Items中のヒットした20件が対象
           $.each(data.Items, function(i,val){
-            var template = '<li class="lists__item">' + '<div class="lists__item__inner">' + '<a href="' +
+            // console.log(data.Items);
+            var template = '<li class="lists__item">' + i + '<div class="lists__item__inner">' + '<a href="' +
             val.Item.itemUrl + '"class="lists__item__link" target="_blank">' + '<img src="' + val.Item
             .largeImageUrl + '" class="lists__item__img" alt="' + val.Item.title + '">' +
             '<p class="lists__item__detail">作品名：　' + val.Item.title + '</p>' +
@@ -111,19 +113,20 @@
       function failed(xhr){
         console.log(xhr);
         // 検索ワードが入力されていない場合
-        if(xhr.responseJSON.error_description === 'keyword must be set'){
+        if(xhr.responseText === '{"error":"wrong_parameter","error_description":"keyword must be set"}'){
           $('.lists').html('<p>検索ワードを入力してください。</p>');
 
           // 検索ワードが半角英数字だった場合
-        }else if(xhr.responseJSON.error_description === 'keyword length must be over 2 characters'){
+        }else if(xhr.responseText === '{"error":"wrong_parameter","error_description":"keyword length must be over 2 characters"}'){
           $('.lists').html('<p>半角英数字1文字では検索できません。<br>検索キーワードを見直してください。</p>');
 
           // リクエスト数過多の場合
-        }else if(xhr.responseJSON.error_description === 'number of allowed requests has been exceeded for this API. please try again soon.'){
+        }else if(xhr.responseText === '{"error":"too_many_requests","error_description":"number of allowed requests has been exceeded for this API. please try again soon."}'){
           $('.lists').html('<p>検索ボタンを連打すると処理が追いつかずエラーになります。<br>1回ずつクリックしてください。</p>');
+        }
 
-          // 通信失敗の場合
-        }else{
+        // 通信失敗の場合
+        if (xhr.statusText === 'error') {
           $('.lists').html('<p>通信エラーです。<br>インターネット接続を確認してもう一度お試しください。</p>');
         }
       }
